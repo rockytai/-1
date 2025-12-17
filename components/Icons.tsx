@@ -131,3 +131,25 @@ export const Cpu = (props: any) => (
     <line x1="1" y1="14" x2="4" y2="14" />
   </IconWrapper>
 );
+
+export const BarChart = (props: any) => (
+  <IconWrapper {...props}>
+    <line x1="12" y1="20" x2="12" y2="10" />
+    <line x1="18" y1="20" x2="18" y2="4" />
+    <line x1="6" y1="20" x2="6" y2="16" />
+  </IconWrapper>
+);
+
+export const BookOpen = (props: any) => (
+  <IconWrapper {...props}>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </IconWrapper>
+);
+
+export const Clock = (props: any) => (
+  <IconWrapper {...props}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </IconWrapper>
+);

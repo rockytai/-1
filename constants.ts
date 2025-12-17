@@ -1,55 +1,112 @@
-import { World, Word } from './types';
+
+import { World, Word, Achievement, Player } from './types';
 
 export const WORLDS: World[] = [
   { 
     id: 1, 
-    name: "新手村", 
-    enemy: "稻草人", 
+    name: "哥布林森林", 
+    enemy: "哥布林王", 
     hp: 40, 
-    img: "🌱", 
-    theme: "bg-green-600", 
-    bgPattern: "bg-green-500", 
-    desc: "你的冒险从这里开始。",
+    img: "👺", 
+    theme: "bg-green-700", 
+    bgPattern: "bg-green-600", 
+    desc: "掠夺资源!",
     textColor: "text-green-100"
   },
   { 
     id: 2, 
-    name: "迷雾森林", 
-    enemy: "野猪王", 
+    name: "骷髅塔", 
+    enemy: "炸弹人", 
     hp: 80, 
-    img: "🌲", 
-    theme: "bg-emerald-800", 
-    bgPattern: "bg-emerald-700", 
-    desc: "小心森林里的野兽！",
-    textColor: "text-emerald-100"
+    img: "💣", 
+    theme: "bg-stone-700", 
+    bgPattern: "bg-stone-600", 
+    desc: "小心爆炸!",
+    textColor: "text-stone-100"
   },
   { 
     id: 3, 
-    name: "繁华都市", 
-    enemy: "机械守卫", 
+    name: "法师山谷", 
+    enemy: "法师", 
     hp: 120, 
-    img: "🏙️", 
-    theme: "bg-blue-700", 
-    bgPattern: "bg-blue-600", 
-    desc: "充满挑战的现代世界。",
-    textColor: "text-blue-100"
+    img: "🧙‍♂️", 
+    theme: "bg-purple-800", 
+    bgPattern: "bg-purple-700", 
+    desc: "魔法对决!",
+    textColor: "text-purple-100"
   },
   { 
     id: 4, 
-    name: "烈焰火山", 
-    enemy: "熔岩巨兽", 
+    name: "飞龙悬崖", 
+    enemy: "喷火龙", 
     hp: 160, 
-    img: "🌋", 
+    img: "🐉", 
     theme: "bg-red-800", 
     bgPattern: "bg-red-700", 
-    desc: "最终的试炼之地！",
+    desc: "空中霸主!",
     textColor: "text-red-100"
   }
 ];
 
-export const AVATARS = ["🤴", "👸", "🥷", "🧙‍♂️", "🧚‍♀️", "🦸‍♂️", "🦹‍♀️", "🤖", "🦊", "🦁"];
+export const AVATARS = [
+    "⚔️", "🏹", "👊", "👺", "💀", "🎈", "🧙‍♂️", "🧚‍♀️", "🐲", "🤖", 
+    "🤴", "👸", "👴", "⛏️", "🐗", "🦇", "❄️", "⚡", "🪓", "🌋"
+];
+
 export const LEVELS_PER_WORLD = 10;
 export const TOTAL_LEVELS = 40;
+
+// --- RPG Logic ---
+// Progressive XP Curve: 1000, 1500, 2000, 2500...
+export const getXpForNextLevel = (level: number) => {
+    return 500 + (level * 500);
+};
+
+export const ACHIEVEMENTS: Achievement[] = [
+    {
+        id: 1,
+        title: "初出茅庐",
+        desc: "赢得第1场战斗胜利",
+        icon: "🗡️",
+        condition: (p: Player) => Object.keys(p.stars).length >= 1
+    },
+    {
+        id: 2,
+        title: "连击大师",
+        desc: "在单局中达到10连击 (Check during battle)",
+        icon: "🔥",
+        condition: (p: Player) => false // Handled manually in battle logic
+    },
+    {
+        id: 3,
+        title: "学富五车",
+        desc: "总分达到 10,000 分",
+        icon: "📚",
+        condition: (p: Player) => p.totalScore >= 10000
+    },
+    {
+        id: 4,
+        title: "完美主义",
+        desc: "在任意关卡获得3颗星",
+        icon: "⭐",
+        condition: (p: Player) => Object.values(p.stars).some(s => s === 3)
+    },
+    {
+        id: 5,
+        title: "久经沙场",
+        desc: "玩家等级达到 5 级",
+        icon: "🏅",
+        condition: (p: Player) => p.level >= 5
+    },
+    {
+        id: 6,
+        title: "地图征服者",
+        desc: "解锁第 2 个世界 (Level 11)",
+        icon: "🗺️",
+        condition: (p: Player) => p.maxUnlockedLevel >= 11
+    }
+];
+
 
 const generateWordList = (): Word[] => {
     // Format: "Character|Pinyin (English/Meaning)"
@@ -177,7 +234,7 @@ export const generateOptions = (targetWord: Word) => {
         !restrictedWords.includes(w.word)
     );
 
-    // If not enough, expand to all words
+    // If the pool is small, expand to all words
     if(candidates.length < 3) {
        candidates = FULL_WORD_LIST.filter(w => 
            w.id !== targetWord.id &&

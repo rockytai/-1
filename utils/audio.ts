@@ -1,3 +1,4 @@
+
 export const AudioEngine = {
   ctx: null as AudioContext | null,
   init: function() {
@@ -43,6 +44,20 @@ export const AudioEngine = {
     this.playTone(300, 'sawtooth', 0.4, 0.3);
     setTimeout(() => this.playTone(250, 'sawtooth', 0.4, 0.3), 300);
     setTimeout(() => this.playTone(200, 'sawtooth', 0.6, 0.3), 600);
+  },
+  playLevelUp: function() {
+    this.init();
+    // A rising arpeggio
+    [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00].forEach((freq, i) => {
+      setTimeout(() => this.playTone(freq, 'sine', 0.1, 0.2), i * 80);
+    });
+    // Final chord
+    setTimeout(() => {
+        this.playTone(523.25, 'triangle', 0.3, 0.3);
+        this.playTone(659.25, 'triangle', 0.3, 0.3);
+        this.playTone(783.99, 'triangle', 0.3, 0.3);
+        this.playTone(1046.50, 'triangle', 0.3, 0.3);
+    }, 600);
   },
   speak: function(text: string) {
     if (!window.speechSynthesis) return;

@@ -1,56 +1,102 @@
 import React from 'react';
 
-export const ProgressBar = ({ current, max, color, label, reverse = false }: { current: number, max: number, color: string, label: string, reverse?: boolean }) => {
+export interface ProgressBarProps {
+  current: number;
+  max: number;
+  color: string;
+  label: string;
+  reverse?: boolean;
+}
+
+export const ProgressBar: React.FC<ProgressBarProps> = ({ current, max, color, label, reverse = false }) => {
   const percent = Math.max(0, Math.min(100, (current / max) * 100));
   return (
-    <div className="w-full relative h-6 bg-gray-900 rounded-full border-2 border-gray-700 overflow-hidden shadow-lg">
+    <div className="w-full relative h-8 bg-gray-900 border-2 border-gray-600 shadow-md overflow-hidden rounded-md">
+      {/* Glossy Effect */}
+      <div className="absolute inset-0 z-20 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+      
       <div 
-        className={`h-full transition-all duration-500 ease-out ${color} ${reverse ? 'float-right' : ''}`} 
+        className={`h-full transition-all duration-300 ease-linear ${color} ${reverse ? 'float-right' : ''} shadow-[inset_0_-2px_4px_rgba(0,0,0,0.3)]`} 
         style={{ width: `${percent}%` }}
       />
-      <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white shadow-black drop-shadow-md tracking-wider select-none z-10">
+      <div className="absolute inset-0 flex items-center justify-center text-sm font-black text-white text-stroke drop-shadow-md uppercase z-10">
         {label}: {Math.ceil(current)}/{max}
       </div>
     </div>
   );
 };
 
-export const Card = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <div className={`bg-amber-50 border-b-8 border-r-4 border-amber-800 rounded-xl shadow-xl overflow-hidden ${className}`}>
+export interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const Card: React.FC<CardProps> = ({ children, className = "" }) => (
+  <div className={`coc-panel border-4 border-gray-500 rounded-lg shadow-2xl overflow-hidden text-gray-800 ${className}`}>
     {children}
   </div>
 );
 
-export const Button = ({ onClick, children, variant = "primary", className = "", disabled = false }: { onClick?: () => void, children: React.ReactNode, variant?: 'primary'|'danger'|'success'|'secondary'|'info', className?: string, disabled?: boolean }) => {
-  const baseStyle = "transform active:scale-95 transition-transform font-bold py-3 px-6 rounded-xl border-b-4 uppercase tracking-wider text-sm md:text-base select-none touch-manipulation flex items-center justify-center gap-2";
+export interface ButtonProps {
+  onClick?: () => void;
+  children: React.ReactNode;
+  variant?: 'primary'|'danger'|'success'|'secondary'|'info'|'warning';
+  className?: string;
+  disabled?: boolean;
+  style?: React.CSSProperties;
+}
+
+export const Button: React.FC<ButtonProps> = ({ onClick, children, variant = "primary", className = "", disabled = false, style }) => {
+  // CoC Button Style: Thick bottom border, vibrant colors, text stroke
+  const baseStyle = "coc-button-shadow transform transition-transform font-black py-4 px-6 rounded-lg border-b-4 border-r-2 border-l-2 border-t text-white uppercase tracking-wide text-lg select-none touch-manipulation flex items-center justify-center gap-2 text-stroke relative overflow-hidden";
+  
   const variants = {
-    primary: "bg-yellow-400 hover:bg-yellow-300 text-yellow-900 border-yellow-700",
-    danger: "bg-red-500 hover:bg-red-400 text-white border-red-800",
-    success: "bg-green-500 hover:bg-green-400 text-white border-green-800",
-    secondary: "bg-gray-200 hover:bg-gray-100 text-gray-700 border-gray-400",
-    info: "bg-sky-400 hover:bg-sky-300 text-white border-sky-700"
+    // Orange (Standard Train/Action)
+    primary: "bg-[#ffb02e] border-[#b96a00] hover:bg-[#ffc14e]",
+    // Red (Close/Cancel)
+    danger: "bg-[#ff4444] border-[#990000] hover:bg-[#ff6666]",
+    // Green (Attack/Confirm)
+    success: "bg-[#83c226] border-[#4f8600] hover:bg-[#96d636]",
+    // Stone (Secondary)
+    secondary: "bg-[#b0b0b0] border-[#666666] text-gray-800 hover:bg-[#c0c0c0] !text-stroke-sm !text-white",
+    // Blue (Info/Magic)
+    info: "bg-[#3399ff] border-[#0055aa] hover:bg-[#55aaff]",
+    // Gold (Shop/Premium) - FIXED: PURE BLACK TEXT, NO SHADOW, NO STROKE for Leaderboard readability
+    warning: "bg-[#ffe160] border-[#cda200] text-black hover:bg-[#fff080] !text-shadow-none !text-stroke-0"
   };
 
   return (
     <button 
       onClick={onClick} 
       disabled={disabled}
-      className={`${baseStyle} ${variants[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      style={style}
+      className={`${baseStyle} ${variants[variant]} ${disabled ? 'grayscale cursor-not-allowed opacity-80' : ''} ${className}`}
     >
-      {children}
+      {/* Gloss reflection */}
+      <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent pointer-events-none"></div>
+      <span className="relative z-10 flex items-center gap-2">{children}</span>
     </button>
   );
 };
 
-export const PlayerAvatar = ({ avatar, size = "md", className = "" }: { avatar: string, size?: 'sm'|'md'|'lg', className?: string }) => {
+export interface PlayerAvatarProps {
+  avatar: string;
+  size?: 'sm'|'md'|'lg';
+  className?: string;
+}
+
+export const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ avatar, size = "md", className = "" }) => {
     const sizeClasses = {
-        sm: "w-10 h-10 text-xl",
-        md: "w-20 h-20 text-4xl",
-        lg: "w-32 h-32 text-6xl"
+        sm: "w-12 h-12 text-2xl",
+        md: "w-24 h-24 text-5xl",
+        lg: "w-36 h-36 text-7xl"
     };
+    // CoC Unit Icon Style: Purple gradient background with gold border
     return (
-        <div className={`${sizeClasses[size]} bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm ${className}`}>
-            {avatar}
+        <div className={`${sizeClasses[size]} bg-gradient-to-br from-[#4f2a75] to-[#2a1342] border-4 border-[#ffd700] rounded-lg flex items-center justify-center shadow-lg relative ${className}`}>
+             {/* Inner gloss */}
+             <div className="absolute inset-0 rounded-md bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+             <div className="drop-shadow-lg z-10">{avatar}</div>
         </div>
     );
 };

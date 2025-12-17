@@ -192,10 +192,10 @@ const generateWordList = (): Word[] => {
         for(let q = 0; q < questionsPerLevel; q++) {
             const rawIndex = (startIdx + q) % rawData.length; 
             const item = rawData[rawIndex];
-            const [word] = item.split('|');
-
-            // No text in questions (Audio only)
-            const meaning = ""; 
+            
+            // NEW LOGIC: Split and keep the meaning part
+            const [word, rest] = item.split('|');
+            const meaning = rest || ""; 
 
             list.push({
                 id: (level * 100) + q,

@@ -4,6 +4,7 @@ import { WORLDS, TOTAL_LEVELS, AVATARS, getXpForNextLevel, ACHIEVEMENTS } from '
 import { AudioEngine } from './utils/audio';
 import UserSelect from './components/views/UserSelect';
 import SinglePlayerBattle from './components/views/Battle';
+import LearningView from './components/views/LearningView';
 import VersusSetup from './components/views/VersusSetup';
 import VersusGame from './components/views/VersusGame';
 import Leaderboard from './components/views/Leaderboard';
@@ -13,7 +14,7 @@ import { Button, Card, PlayerAvatar, ProgressBar } from './components/UI';
 import { Sword, Users, Home, Star, Lock, ArrowLeft, ArrowRight, RefreshCcw, BarChart, BookOpen } from './components/Icons';
 
 function App() {
-  const [appState, setAppState] = useState<'SPLASH' | 'USER_SELECT' | 'MENU' | 'WORLD_SELECT' | 'LEVEL_SELECT' | 'BATTLE' | 'VERSUS_SETUP' | 'VERSUS_GAME' | 'RESULT' | 'LEADERBOARD' | 'MISTAKE_PRACTICE' | 'ACHIEVEMENTS'>('SPLASH'); 
+  const [appState, setAppState] = useState<'SPLASH' | 'USER_SELECT' | 'MENU' | 'WORLD_SELECT' | 'LEVEL_SELECT' | 'LEARNING' | 'BATTLE' | 'VERSUS_SETUP' | 'VERSUS_GAME' | 'RESULT' | 'LEADERBOARD' | 'MISTAKE_PRACTICE' | 'ACHIEVEMENTS'>('SPLASH'); 
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   
@@ -410,7 +411,7 @@ function App() {
                           return (
                               <button 
                                   key={lvl}
-                                  onClick={() => { if(isUnlocked) { setCurrentLevel(lvl); setAppState('BATTLE'); } }}
+                                  onClick={() => { if(isUnlocked) { setCurrentLevel(lvl); setAppState('LEARNING'); } }}
                                   disabled={!isUnlocked}
                                   className={`aspect-square rounded-xl border-b-8 flex flex-col items-center justify-center relative shadow-lg active:scale-95 transition-transform ${isUnlocked ? 'bg-[#ffe160] border-[#cda200] text-black' : 'bg-[#999] border-[#666] text-[#ccc]'}`}
                               >
@@ -445,6 +446,16 @@ function App() {
               </div>
           </div>
       );
+  }
+
+  // --- ADDED LEARNING VIEW ---
+  if (appState === 'LEARNING') {
+      if (!currentPlayer || currentLevel === null) return null;
+      return <LearningView 
+          level={currentLevel}
+          onComplete={() => setAppState('BATTLE')}
+          onExit={() => setAppState('LEVEL_SELECT')}
+      />;
   }
 
   if (appState === 'BATTLE') {

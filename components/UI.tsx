@@ -47,22 +47,23 @@ export interface ButtonProps {
 }
 
 export const Button: React.FC<ButtonProps> = ({ onClick, children, variant = "primary", className = "", disabled = false, style }) => {
-  // CoC Button Style: Thick bottom border, vibrant colors, text stroke
-  const baseStyle = "coc-button-shadow transform transition-transform font-black py-4 px-6 rounded-lg border-b-4 border-r-2 border-l-2 border-t text-white uppercase tracking-wide text-lg select-none touch-manipulation flex items-center justify-center gap-2 text-stroke relative overflow-hidden";
+  // CoC Button Style: Thick bottom border, vibrant colors.
+  // REMOVED 'text-stroke' from baseStyle to handle it per variant for better control (e.g. black text on yellow button).
+  const baseStyle = "coc-button-shadow transform transition-transform font-black py-4 px-6 rounded-lg border-b-4 border-r-2 border-l-2 border-t text-white uppercase tracking-wide text-lg select-none touch-manipulation flex items-center justify-center gap-2 relative overflow-hidden";
   
   const variants = {
     // Orange (Standard Train/Action)
-    primary: "bg-[#ffb02e] border-[#b96a00] hover:bg-[#ffc14e]",
+    primary: "bg-[#ffb02e] border-[#b96a00] hover:bg-[#ffc14e] text-stroke",
     // Red (Close/Cancel)
-    danger: "bg-[#ff4444] border-[#990000] hover:bg-[#ff6666]",
+    danger: "bg-[#ff4444] border-[#990000] hover:bg-[#ff6666] text-stroke",
     // Green (Attack/Confirm)
-    success: "bg-[#83c226] border-[#4f8600] hover:bg-[#96d636]",
-    // Stone (Secondary)
-    secondary: "bg-[#b0b0b0] border-[#666666] text-gray-800 hover:bg-[#c0c0c0] !text-stroke-sm !text-white",
+    success: "bg-[#83c226] border-[#4f8600] hover:bg-[#96d636] text-stroke",
+    // Stone (Secondary) - Uses smaller stroke
+    secondary: "bg-[#b0b0b0] border-[#666666] text-gray-800 hover:bg-[#c0c0c0] text-stroke-sm !text-white",
     // Blue (Info/Magic)
-    info: "bg-[#3399ff] border-[#0055aa] hover:bg-[#55aaff]",
-    // Gold (Shop/Premium) - FIXED: PURE BLACK TEXT, NO SHADOW, NO STROKE for Leaderboard readability
-    warning: "bg-[#ffe160] border-[#cda200] text-black hover:bg-[#fff080] !text-shadow-none !text-stroke-0"
+    info: "bg-[#3399ff] border-[#0055aa] hover:bg-[#55aaff] text-stroke",
+    // Gold (Shop/Premium) - PURE BLACK TEXT, NO SHADOW/STROKE for readability
+    warning: "bg-[#ffe160] border-[#cda200] text-black hover:bg-[#fff080]"
   };
 
   return (
